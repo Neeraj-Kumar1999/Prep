@@ -1,0 +1,49 @@
+<aura:component controller="SchemaRecord_TaskSvrController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global" >
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>    
+    <aura:attribute name="PageHeading" type="String" default="Recent Records"/>
+    <aura:attribute name="pickl" type="List" />    
+    <aura:attribute name="selectedValue" type="String" />
+    <aura:attribute name="issysadm" type="boolean" default="false" />
+    
+    <aura:attribute name="CurrentUser" type="Object"/>
+    <force:recordData recordId="{!$SObjectType.CurrentUser.Id}"
+                      fields="Profile.Name"
+                      targetFields="{!v.CurrentUser}"/>
+    
+    
+    <div class="slds-m-top--xx-large">
+        <div class="slds-page-header">
+            <div class="slds-align--absolute-center">
+                <div class="slds-text-heading--large">       
+                    {!v.PageHeading}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/> <br/>    
+    <aura:attribute name="RecSize" type="String" />
+    <div class = "slds-size--3-of-8">
+        <lightning:select aura:id="selectid" label="Select Object" name="obj" value="{!v.selectedValue}">
+            <option value="" text="- None -" />
+            <aura:iteration items="{!v.pickl}" var="per">
+                <option value="{!per}" text="{!per}" />
+            </aura:iteration>
+        </lightning:select>
+        <lightning:input type="String" name="RecSize" label="Enter Record Size" value="{!v.RecSize}" />
+        <br/>
+        <lightning:button label="Get Records" onclick="{!c.doSearch}"/>
+    </div>    
+    <br/>
+    
+    <!-- division that will show the dynamic content --> 
+    <div class="slds-scrollable_x"> 
+        <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal slds-table_col-bordered">
+            <tbody id='sfdctable' />
+        </table>
+    </div>
+    
+    
+</aura:component>

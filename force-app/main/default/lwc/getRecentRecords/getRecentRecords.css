@@ -1,0 +1,29 @@
+h1 {
+    font-size: xx-large;
+    font-style: normal;
+    font-variant: normal;
+    color: red;
+}
+
+.my-cystom-input{
+    margin-top: 25px;
+    margin-left: 25px;
+    margin-bottom: 15px;
+    width: 400px;
+  }
+
+.my-button{
+    margin-top: 25px;
+    margin-left: 25px; 
+}
+
+.slds-p-around_medium{
+    margin-top: 25px;
+    margin-left: 25px;
+    width: 200px;
+}
+
+.my-button1{
+    margin-left: 25px;
+    margin-top: 25px;
+}

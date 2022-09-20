@@ -1,0 +1,79 @@
+<template>
+  <lightning-card  variant="Narrow"  title="View Records" icon-name="standard:account">
+  <lightning-layout-item size="2">  
+            <template if:true={displayList}>       
+                <lightning-combobox 
+                  name="progress" 
+                  label="Select Entity" 
+                  placeholder="Select Sobject"
+                  class="my-cystom-input"
+                  value={value} 
+                  options={options}  
+                  onchange={handleChange}>
+                </lightning-combobox>
+            </template>
+            <template if:true={isselectedSob}>                
+                <div class="my-cystom-input lgc-bg">
+                  <lightning-input type="number" label="Enter Size" onchange={handlepagesizechange}></lightning-input>
+              </div>
+            </template>
+            <template if:true={ifreceiveddata}>
+              <div style="height: 300px;">
+                <lightning-datatable
+                  key-field="id"
+                  data={tableData}
+                  columns={columnslistfinal}
+                  onrowaction={navigateToEditRecordPage}                 
+                  hide-checkbox-column="true">                  
+                </lightning-datatable>
+              </div>
+          </template>
+              
+                <div class="spinner">
+                  <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+                        </lightning-spinner>
+                  </template>
+              </div>
+
+              <template if:true={isadmin}>
+
+             <lightning-button
+                        variant="brand"
+                        label="Add Fields"
+                        class="my-button1"
+                        onclick={showaddbutton} >                        
+                    </lightning-button>
+                  </template>
+
+              <template if:true={showaddfields}>              
+                <lightning-card>
+                <lightning-dual-listbox
+                name="languages"
+                label="Select fields"
+                source-label="Available"
+                selected-label="Selected"
+                field-level-help="add fields"
+                options={fieldcolumslist}        
+                value={defaultvalues}        
+                onchange={handlechangefields}>
+                </lightning-dual-listbox>
+                <p slot="footer">
+                    <lightning-button
+                        variant="brand"
+                        class="my-button"
+                        label="Save"
+                        onclick={saveChanges}            
+                        disabled={diableBool}>
+                    </lightning-button>
+                </p>
+                <template if:true={isinpblank}>
+                  <h1>Please select atleast one field!</h1>
+                </template>
+            </lightning-card>  
+                          
+          </template>
+  
+  </lightning-layout-item>
+  </lightning-card>
+</template>
