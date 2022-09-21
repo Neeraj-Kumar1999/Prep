@@ -38,7 +38,9 @@ export default class check extends NavigationMixin(LightningElement) {
 @track showbutton = false;
 @track fieldcolumslist =[];
 @track passfields = '';
-defaultvalues = [];
+@track defaultvalues = [{ label: 'Name', value: 'Name'},   
+                    { label: 'Created By ID', value: 'CreatedById'}, 
+                    { label: 'Created Date', value: 'CreatedDate'}];
 recordPageUrl;
 isinpblank = false;
 
@@ -49,80 +51,68 @@ connectedCallback() {
 console.log('User Id:'+this.userId);
 checkprofile()
 .then(result => {
-    console.log('Result:'+result);
-    if(result == 'System Administrator'){
-    this.isadmin = true;
-    }
-    console.log('Is Admin:'+this.isadmin);
-    })
-    .catch(error => {
-    console.log('In connected call back error....');
-    this.error = error;
-    console.log('Error is ' + this.error);
-    });    
+console.log('Result:'+result);
+if(result == 'System Administrator'){
+this.isadmin = true;
+}
+console.log('Is Admin:'+this.isadmin);
+})
+.catch(error => {
+console.log('In connected call back error....');
+this.error = error;
+console.log('Error is ' + this.error);
+});    
 }
 
 
 
 showaddbutton(){
-    console.log('inside add fields');
+console.log('inside add fields');
 this.showaddfields = true;
 this.ifreceiveddata = false;
 selectfields({selectedObject: this.selectedsobj})
 .then(result => {
-    console.log('Result:'+JSON.stringify(result));
-    this.fieldcolumslist = result;
-    var tempsoblist = []; 
+console.log('Result:'+JSON.stringify(result));
+this.fieldcolumslist = result;
+var tempsoblist = []; 
 for (var i = 0; i < this.fieldcolumslist.length; i++) {     
 let templist = Object.assign({}, this.fieldcolumslist[i]); //cloning object      
 tempsoblist.push(templist);  
 }   
-    
-tempsoblist.push({
-    type:"button",
-    fixedWidth: 150,
-    typeAttributes: {
-        label: 'Edit',
-        name: 'edit',
-        variant: 'brand'
-    }
-});   
-/*this.defaultvalues.push({
-    label: 'Name',                    
-    value: 'Name'
-});   
-this.defaultvalues.push({
-    label: 'Created By ID',                    
-    value: 'CreatedById'
-}); 
-this.defaultvalues.push({
-    label: 'Created Date',                    
-    value: 'CreatedDate'
-}); */
-console.log('Columns::'+JSON.stringify(this.fieldcolumslist));
 
+tempsoblist.push({
+type:"button",
+fixedWidth: 150,
+typeAttributes: {
+    label: 'Edit',
+    name: 'edit',
+    variant: 'brand'
+}
+});   
+console.log('Columns::'+JSON.stringify(this.fieldcolumslist));
+//this.defaultvalues = this.fieldcolumslist;
 console.log('Default::'+JSON.stringify(this.defaultvalues));
 this.isadmin = false;
 
 this.columnslistfinal = tempsoblist;
-    })
-    .catch(error => {         
-        this.error = error;
-        console.log('Error is ' + this.error);
-    });
+})
+.catch(error => {         
+    this.error = error;
+    console.log('Error is ' + this.error);
+});
 }
 @wire (getSobjectsmethod, {}) 
 wiredgetgetSobjectsmethod({data,error}){
 if (data) {                  
-    for(i=0; i<data.length; i++)  {                
-        this.sobname.push({
-            label: data[i],                    
-            value: data[i]
-        });                                  
-    }                
-    this.displayList =  true;          
+for(i=0; i<data.length; i++)  {                
+    this.sobname.push({
+        label: data[i],                    
+        value: data[i]
+    });                                  
+}                
+this.displayList =  true;          
 } else if (error) {
-    this.error = error;                    
+this.error = error;                    
 }
 }
 
@@ -155,15 +145,15 @@ for (var i = 0; i < this.columnslist.length; i++) {
 let templist = Object.assign({}, this.columnslist[i]); //cloning object      
 tempsoblist.push(templist);  
 }   
-    
+
 tempsoblist.push({
-    type:"button",
-    fixedWidth: 150,
-    typeAttributes: {
-        label: 'Edit',
-        name: 'edit',
-        variant: 'brand'
-    }
+type:"button",
+fixedWidth: 150,
+typeAttributes: {
+    label: 'Edit',
+    name: 'edit',
+    variant: 'brand'
+}
 });    
 
 
@@ -186,15 +176,12 @@ console.log('Selected Rec:'+this.selectedRec);
 this[NavigationMixin.Navigate]({
 type:'standard__recordPage',
 attributes:{
-    recordId: this.selectedRec,
-    objectApiName:this.selectedsobj,    
-    actionName: 'edit'
-}
-});
+recordId: this.selectedRec,
+objectApiName:this.selectedsobj,    
+actionName: 'edit'
     }
-
-
-
+});
+}
 
 
 handlechangefields(event){
@@ -202,13 +189,13 @@ console.log('inside fields change');
 this.inpfields = event.detail.value;
 console.log('Selected fields:'+this.inpfields);
 }
+
 saveChanges(){
-//   this.passfields = this.inpfields;
 if(this.inpfields.length>0){
-    this.isinpblank = false;
+this.isinpblank = false;    
 for(i=0;i<this.inpfields.length;i++){
 if(this.passfields!= null){
-    this.passfields = this.passfields+','+this.inpfields[i];
+this.passfields = this.passfields+','+this.inpfields[i];
 } else this.passfields = this.inpfields[i];
 }
 console.log('Final String:'+this.passfields);
@@ -216,6 +203,10 @@ this.showbutton = false;
 this.showaddfields = false;
 this.ifreceiveddata = true;
 }
-else this.isinpblank = true;
+else {this.passfields = ',Name,CreatedDate,CreatedById';
+this.showbutton = false;
+this.showaddfields = false;
+this.ifreceiveddata = true;
+}
 }
 }

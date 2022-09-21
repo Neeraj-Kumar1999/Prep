@@ -49,15 +49,17 @@
               <template if:true={showaddfields}>              
                 <lightning-card>
                 <lightning-dual-listbox
-                name="languages"
+                name="Select Fields to display"
                 label="Select fields"
                 source-label="Available"
                 selected-label="Selected"
                 field-level-help="add fields"
+                required
                 options={fieldcolumslist}        
                 value={defaultvalues}        
                 onchange={handlechangefields}>
                 </lightning-dual-listbox>
+                
                 <p slot="footer">
                     <lightning-button
                         variant="brand"
