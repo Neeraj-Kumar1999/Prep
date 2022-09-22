@@ -3,16 +3,10 @@ import getSobjectsmethod from '@salesforce/apex/GetRecentRecords.getSobjectsmeth
 import objectRecords from "@salesforce/apex/GetRecentRecords.objectRecords";
 import checkprofile from "@salesforce/apex/GetRecentRecords.checkprofile";
 import selectfields from "@salesforce/apex/GetRecentRecords.selectfields";
-import { refreshApex } from '@salesforce/apex';
 import { NavigationMixin } from 'lightning/navigation';
 import USER_ID from '@salesforce/user/Id'; 
-import SystemModstamp from "@salesforce/schema/Account.SystemModstamp";
 
 let i=0;
-const actions = [
-{ label: 'View', name: 'view' },
-{ label: 'Edit', name: 'edit' },
-];
 export default class check extends NavigationMixin(LightningElement) {
 @track displayList;
 @track allObjectList = [];
@@ -38,27 +32,18 @@ export default class check extends NavigationMixin(LightningElement) {
 @track showbutton = false;
 @track fieldcolumslist =[];
 @track passfields = '';
-@track defaultvalues = [{ label: 'Name', value: 'Name'},   
-                    { label: 'Created By ID', value: 'CreatedById'}, 
-                    { label: 'Created Date', value: 'CreatedDate'}];
-recordPageUrl;
 isinpblank = false;
 
-
-
 connectedCallback() {
-//  this.doInit();
-console.log('User Id:'+this.userId);
 checkprofile()
 .then(result => {
 console.log('Result:'+result);
-if(result == 'System Administrator'){
-this.isadmin = true;
+if(result == true){
+this.isadmin = result;
 }
 console.log('Is Admin:'+this.isadmin);
 })
 .catch(error => {
-console.log('In connected call back error....');
 this.error = error;
 console.log('Error is ' + this.error);
 });    
@@ -90,7 +75,6 @@ typeAttributes: {
 }
 });   
 console.log('Columns::'+JSON.stringify(this.fieldcolumslist));
-//this.defaultvalues = this.fieldcolumslist;
 console.log('Default::'+JSON.stringify(this.defaultvalues));
 this.isadmin = false;
 
@@ -119,6 +103,7 @@ this.error = error;
 get options(){        
 return this.sobname;
 }
+
 handleChange(event){        
 this.value = event.detail.value; 
 console.log(this.value);
@@ -142,7 +127,7 @@ this.columnslist = result.data.fieldList;
 console.log('Columns:'+JSON.stringify(this.columnslist));
 var tempsoblist = []; 
 for (var i = 0; i < this.columnslist.length; i++) {     
-let templist = Object.assign({}, this.columnslist[i]); //cloning object      
+let templist = Object.assign({}, this.columnslist[i]);   
 tempsoblist.push(templist);  
 }   
 
@@ -203,7 +188,7 @@ this.showbutton = false;
 this.showaddfields = false;
 this.ifreceiveddata = true;
 }
-else {this.passfields = ',Name,CreatedDate,CreatedById';
+else {this.passfields = ',Name,CreatedById,CreatedDate';
 this.showbutton = false;
 this.showaddfields = false;
 this.ifreceiveddata = true;
